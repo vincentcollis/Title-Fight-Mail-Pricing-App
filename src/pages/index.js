@@ -3,26 +3,42 @@ import styled from 'styled-components';
 
 export default function IndexPage() {
 
-  const [quanity, setQuanity] = useState()
+  const [quanity, setQuanity] = useState('')
   const [format, setFormat] = useState("13 x 8.5 Postcard")
-  const [costPerPeice, setCostPerPeice] = useState(25)
-  const [total, setTotal] = useState(0)
-
+  const [costPerPeice, setCostPerPeice] = useState(.76)
+  const [total, setTotal] = useState(0) 
   const [orders, setOrders] = useState([])
-  const [orderTotal, setOrderTotal] = useState(0)
+  
 
   const calcCostPerPeice = (x) => {
     let num;
+
     switch (x) {
       case "13 x 8.5 Postcard":
-        num = 25
+        num = .76
         break;
       case "11 x 6 Postcard":
-        num = 50
+        num = .71
+        break;
+      case "17 x 10.5 1-Fold":
+        num = .86
+        break;
+      case "8.5 x 11 2-Fold":
+        num = .74
+        break;
+      case "17 x 10.5 2-Fold":
+        num = .82
+        break;
+      case "8.5 x 11 Postcard":
+        num = .78
+        break;
+      case "9 x 4 Walk Card":
+        num = .00
+        break;
       default:
         break;
     }
-    console.log(num)
+    
     return num
   }
 
@@ -30,21 +46,22 @@ export default function IndexPage() {
     "13 x 8.5 Postcard",
     "11 x 6 Postcard",
     "17 x 10.5 1-Fold",
-    "3.5 x 8.5 Walk Card",
+    "8.5 x 11 2-Fold",
+    "17 x 10.5 2-Fold",
+    "8.5 x 11 Postcard",
+    "9 x 4 Walk Card"
   ]
   
   const calculateTotal = (x = orders) => {
     let sum = 0
-    console.log(x)
-    for (let i = 0; i < x.length; i++) {
+    // console.log(x)
+    for(let i = 0; i < x.length; i++) {
       const element = x[i].total
       sum = sum + element
     }  
 
     return sum
   }
-
-  
 
   const formHandler = (e) => {
     e.preventDefault()
@@ -68,17 +85,17 @@ export default function IndexPage() {
         break;
     }
   }
+
   
-  // calculateTotal(orders)
   return (
     <div>
       <form>
-          <label for='format'> Format:</label>
+          <label > Format:</label>
           <select id="format" name="format" onChange={formHandler}>
             {mailFormat.map((x,i) => <option key={i} value={x} > {x} </option>)}
           </select>
           <p/>
-          <label for="quanity"> Quanity: </label>
+          <label > Quanity: </label>
           <input type="number" name="quanity" onChange={formHandler} value={quanity} placeholder="5000"></input>
           <p/>
           <button type="submit" name="submit" onClick={formHandler}> Submit </button>
