@@ -1,15 +1,15 @@
 import React, {useState, useEffect} from 'react'
 import styled from 'styled-components';
 
-
-
-
 export default function IndexPage() {
 
-  const [quanity, setQuanity] = useState(0)
+  const [quanity, setQuanity] = useState()
   const [format, setFormat] = useState("13 x 8.5 Postcard")
   const [costPerPeice, setCostPerPeice] = useState(25)
   const [total, setTotal] = useState(0)
+
+  const [orders, setOrders] = useState([])
+  const [orderTotal, setOrderTotal] = useState(0)
 
   const calcCostPerPeice = (x) => {
     let num;
@@ -33,64 +33,64 @@ export default function IndexPage() {
     "3.5 x 8.5 Walk Card",
   ]
   
-  const calculateTotal = (x, y) => {
-    let num = x * y
-    setTotal(num)
+  const calculateTotal = (x = orders) => {
+    let sum = 0
+    console.log(x)
+    for (let i = 0; i < x.length; i++) {
+      const element = x[i].total
+      sum = sum + element
+    }  
+
+    return sum
   }
 
+  
+
   const formHandler = (e) => {
+    e.preventDefault()
+
     let key = e.target.name  
     let value =  e.target.value
 
     switch (key) {
       case 'format':
-        // console.log(value)
         setFormat(value)
         setTotal(calcCostPerPeice(value)*quanity)
-        
         break;
       case 'quanity':
-        // console.log(value)
         setQuanity(value)
         setTotal(value*costPerPeice)
         break;
+      case 'submit':
+        let order = {format: format, quanity: quanity, total: total}
+        setOrders([...orders,order])
       default:
         break;
     }
   }
-
-  console.log(`
-  quanity: ${quanity}
-  format: ${format}
-  total: ${total}
-  `)
-
-  // calculateTotal(quanity, costPerPeice)
-
+  
+  // calculateTotal(orders)
   return (
     <div>
       <form>
-        <p>
           <label for='format'> Format:</label>
           <select id="format" name="format" onChange={formHandler}>
-            {mailFormat.map(x => <option key={x} value={x} > {x} </option>)}
+            {mailFormat.map((x,i) => <option key={i} value={x} > {x} </option>)}
           </select>
-        </p>
-        <p>
+          <p/>
           <label for="quanity"> Quanity: </label>
           <input type="number" name="quanity" onChange={formHandler} value={quanity} placeholder="5000"></input>
-        </p>
-
-        {/* <p>
-          <label for="total"> Total: </label>
-          <input type="text" name="total" value={total}> </input>
-        </p> */}
+          <p/>
+          <button type="submit" name="submit" onClick={formHandler}> Submit </button>
       </form>
       
       <div>
-        {/* {quanity * costPerPeice} */}
-        {total}
-      </div>
+        {orders.map((x,i) => <div key={i}> Format: {x.format} Quanity: {x.quanity} Total: {x.total} </div>)}
+      </div> <p/>
+
+      <div>
+        Total Cost: {calculateTotal()}
+      </div>    
 
     </div>
   )
